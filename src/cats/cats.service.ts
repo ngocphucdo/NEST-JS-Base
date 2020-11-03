@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Cat, CatDocument } from './schemas/cat.schema';
-import { CreateCatDTO } from './dtos/CreateCat.dto';
+import { CatDocument } from './schemas/cat.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { ICat } from './interfaces/cat.interface';
 
 @Injectable()
 export class CatsService {
@@ -10,20 +10,20 @@ export class CatsService {
     @InjectModel('Cat') private readonly catModel: Model<CatDocument>,
   ) {}
 
-  async create(cat: CreateCatDTO): Promise<Cat> {
+  async create(cat: ICat): Promise<ICat> {
     const createCat = new this.catModel(cat);
     return createCat.save();
   }
 
-  async findAll(): Promise<Cat[]> {
+  async findAll(): Promise<ICat[]> {
     return this.catModel.find();
   }
 
-  async findOne(id: string): Promise<Cat> {
+  async findOne(id: string): Promise<ICat> {
     return this.catModel.findById({ _id: id });
   }
 
-  async updateOne(id: string, cat: Cat): Promise<Cat> {
+  async updateOne(id: string, cat: ICat): Promise<ICat> {
     const updatedCat = await this.catModel.findOneAndUpdate({ _id: id }, cat, {
       new: true,
       upsert: false,
